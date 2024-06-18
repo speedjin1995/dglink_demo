@@ -32,9 +32,9 @@ else{
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta http-equiv="x-ua-compatible" content="ie=edge">
 
-  <title>CCB </title>
+  <title>DG Link</title>
 
-  <link rel="icon" href="assets/logoSmall.jpeg" type="image">
+  <!--link rel="icon" href="assets/logoSmall.jpeg" type="image"-->
   <!-- Font Awesome Icons -->
   <link rel="stylesheet" href="plugins/fontawesome-free/css/all.min.css">
   <!-- IonIcons -->
@@ -310,10 +310,10 @@ to get the desired effect
   <!--aside class="main-sidebar sidebar-dark-primary elevation-4"  style="background-color: #ffffff;"-->
   <aside class="main-sidebar sidebar-dark-primary elevation-4" style="background-color: #3d44c1;">
     <!-- Brand Logo -->
-    <a href="#" class="brand-link logo-switch" style="line-height: 5;">
+    <!--a href="#" class="brand-link logo-switch" style="line-height: 5;">
       <img src="assets/logoSmall.jpeg" alt="Sneakercube Logo" class="brand-image-xl logo-xs">
       <img src="assets/logoSmall.jpeg" alt="Sneakercube Logo" class="brand-image-xl logo-xl" style="width: 40%;max-height: max-content;">
-    </a>
+    </a-->
 
     <!-- Sidebar -->
     <div class="sidebar">
@@ -333,25 +333,11 @@ to get the desired effect
         <ul class="nav nav-pills nav-sidebar flex-column" id="sideMenu" data-widget="treeview" role="menu" data-accordion="false">
           <!-- Add icons to the links using the .nav-icon class
             with font-awesome or any other icon font library -->
-          <li class="nav-item has-treeview menu-open">
-            <a href="#" class="nav-link">
-              <i class="nav-icon fas fa-bar-chart"></i>
-              <p><?=$languageArray['dashboard_code'][$language] ?><i class="fas fa-angle-left right"></i></p>
+          <li class="nav-item">
+            <a href="#dashboard" data-file="dashboard.php" class="nav-link link">
+              <i class="nav-icon fas fa-chart-bar"></i>
+              <p><?=$languageArray['dashboard_code'][$language] ?></p>
             </a>
-            <ul class="nav nav-treeview" style="display: block;">
-              <li class="nav-item">
-                <a href="#dashboard" data-file="dashboard.php" class="nav-link link">
-                  <i class="nav-icon fas fa-check-square"></i>
-                  <p><?=$languageArray['ccb_farm_code'][$language] ?></p>
-                </a>
-              </li>
-              <li class="nav-item">
-                <a href="#otherDashboard" data-file="dashboardOther.php" class="nav-link link">
-                  <i class="nav-icon fas fa-plus-square"></i>
-                  <p><?=$languageArray['other_farm_code'][$language] ?></p>
-                </a>
-              </li>
-            </ul>
           </li>
           <li class="nav-item">
             <a href="#weight" data-file="weightPage.php" class="nav-link link">
@@ -359,25 +345,11 @@ to get the desired effect
               <p><?=$languageArray['weight_weighing_code'][$language] ?></p>
             </a>
           </li>
-          <li class="nav-item has-treeview">
-            <a href="#" class="nav-link">
-              <i class="nav-icon fas fa-tachometer-alt"></i>
-              <p><?=$languageArray['weighing_report_code'][$language] ?><i class="fas fa-angle-left right"></i></p>
+          <li class="nav-item">
+            <a href="#billboard" data-file="billboard.php" class="nav-link link">
+              <i class="nav-icon fas fa-book"></i>
+              <p><?=$languageArray['weighing_report_code'][$language] ?></p>
             </a>
-            <ul class="nav nav-treeview" style="display: none;">
-              <li class="nav-item">
-                <a href="#billboard" data-file="billboard.php" class="nav-link link">
-                  <i class="nav-icon fas fa-book"></i>
-                  <p><?=$languageArray['ccb_farm_code'][$language] ?></p>
-                </a>
-              </li>
-              <li class="nav-item">
-                <a href="#otherBillboard" data-file="billboardOther.php" class="nav-link link">
-                  <i class="nav-icon fas fa-address-book"></i>
-                  <p><?=$languageArray['other_farm_code'][$language] ?></p>
-                </a>
-              </li>
-            </ul>
           </li>
           <?php 
               if($role == "ADMIN"){

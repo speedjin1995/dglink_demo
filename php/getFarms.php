@@ -30,7 +30,6 @@ if(isset($_POST['userID'])){
                 $message['address3'] = $row['address3'];
                 $message['address4'] = $row['address4'];
                 $message['states'] = $row['states'];
-                $message['category'] = $row['category'];
                 $message['suppliers'] = $row['suppliers'];
             }
             

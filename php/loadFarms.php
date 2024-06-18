@@ -64,7 +64,6 @@ while($row = mysqli_fetch_assoc($empRecords)) {
     "address4"=>$row['address4'],
     "states"=>$states,
     "suppliers"=>$row['suppliers'],
-    "category"=>$row['category'],
     "deleted"=>$row['deleted']
   );
 
