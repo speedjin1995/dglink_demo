@@ -9,6 +9,7 @@ if(!isset($_SESSION['userID'])){
 }
 else{
     $userId = $_SESSION['userID'];
+    $company = $_SESSION['customer'];
 }
 
 if(isset($_POST['username'], $_POST['name'], $_POST['userRole'])){
@@ -54,8 +55,8 @@ if(isset($_POST['username'], $_POST['name'], $_POST['userRole'])){
         $password = '123456';
         $password = hash('sha512', $password . $random_salt);
 
-        if ($insert_stmt = $db->prepare("INSERT INTO users (username, name, password, salt, created_by, role_code, farms) VALUES (?, ?, ?, ?, ?, ?, ?)")) {
-            $insert_stmt->bind_param('sssssss', $username, $name, $password, $random_salt, $userId, $roleCode, $farms);
+        if ($insert_stmt = $db->prepare("INSERT INTO users (username, name, password, salt, created_by, role_code, farms, customer) VALUES (?, ?, ?, ?, ?, ?, ?, ?)")) {
+            $insert_stmt->bind_param('ssssssss', $username, $name, $password, $random_salt, $userId, $roleCode, $farms, $company);
             
             // Execute the prepared query.
             if (! $insert_stmt->execute()) {

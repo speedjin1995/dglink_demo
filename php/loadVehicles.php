@@ -1,6 +1,8 @@
 <?php
 ## Database configuration
 require_once 'db_connect.php';
+session_start();
+$company = $_SESSION['customer'];
 
 ## Read value
 $draw = $_POST['draw'];
@@ -18,17 +20,17 @@ if($searchValue != ''){
 }
 
 ## Total number of records without filtering
-$sel = mysqli_query($db,"select count(*) as allcount from vehicles LEFT JOIN transporters ON vehicles.driver = transporters.id");
+$sel = mysqli_query($db,"select count(*) as allcount from vehicles LEFT JOIN transporters ON vehicles.driver = transporters.id WHERE vehicles.customer = '$company'");
 $records = mysqli_fetch_assoc($sel);
 $totalRecords = $records['allcount'];
 
 ## Total number of record with filtering
-$sel = mysqli_query($db,"select count(*) as allcount from vehicles LEFT JOIN transporters ON vehicles.driver = transporters.id WHERE vehicles.deleted='0'".$searchQuery);
+$sel = mysqli_query($db,"select count(*) as allcount from vehicles LEFT JOIN transporters ON vehicles.driver = transporters.id WHERE vehicles.deleted='0' AND vehicles.customer = '$company'".$searchQuery);
 $records = mysqli_fetch_assoc($sel);
 $totalRecordwithFilter = $records['allcount'];
 
 ## Fetch records
-$empQuery = "select vehicles.*, transporters.transporter_name from vehicles LEFT JOIN transporters ON vehicles.driver = transporters.id WHERE vehicles.deleted='0'".$searchQuery." order by vehicles.deleted, ".$columnName." ".$columnSortOrder." limit ".$row.",".$rowperpage;
+$empQuery = "select vehicles.*, transporters.transporter_name from vehicles LEFT JOIN transporters ON vehicles.driver = transporters.id WHERE vehicles.deleted='0' AND vehicles.customer = '$company'".$searchQuery." order by vehicles.deleted, ".$columnName." ".$columnSortOrder." limit ".$row.",".$rowperpage;
 $empRecords = mysqli_query($db, $empQuery);
 $data = array();
 $counter = 1;

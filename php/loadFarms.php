@@ -1,6 +1,8 @@
 <?php
 ## Database configuration
 require_once 'db_connect.php';
+session_start();
+$company = $_SESSION['customer'];
 
 ## Read value
 $draw = $_POST['draw'];
@@ -14,21 +16,21 @@ $searchValue = mysqli_real_escape_string($db,$_POST['search']['value']); // Sear
 ## Search 
 $searchQuery = " ";
 if($searchValue != ''){
-   $searchQuery = " WHERE (name like '%".$searchValue."%' OR farms_code like '%".$searchValue."%')";
+   $searchQuery = " AND (name like '%".$searchValue."%' OR farms_code like '%".$searchValue."%')";
 }
 
 ## Total number of records without filtering
-$sel = mysqli_query($db,"select count(*) as allcount from farms");
+$sel = mysqli_query($db,"select count(*) as allcount from farms WHERE customer = '$company'");
 $records = mysqli_fetch_assoc($sel);
 $totalRecords = $records['allcount'];
 
 ## Total number of record with filtering
-$sel = mysqli_query($db,"select count(*) as allcount from farms".$searchQuery);
+$sel = mysqli_query($db,"select count(*) as allcount from farms WHERE customer = '$company'".$searchQuery);
 $records = mysqli_fetch_assoc($sel);
 $totalRecordwithFilter = $records['allcount'];
 
 ## Fetch records
-$empQuery = "select * from farms".$searchQuery." order by deleted, ".$columnName." ".$columnSortOrder." limit ".$row.",".$rowperpage;
+$empQuery = "select * from farms WHERE customer = '$company'".$searchQuery." order by deleted, ".$columnName." ".$columnSortOrder." limit ".$row.",".$rowperpage;
 $empRecords = mysqli_query($db, $empQuery);
 $data = array();
 $counter = 1;

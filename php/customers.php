@@ -9,6 +9,7 @@ if(!isset($_SESSION['userID'])){
 }
 else{
     $userId = $_SESSION['userID'];
+    $company = $_SESSION['customer'];
 }
 
 if(isset($_POST['code'], $_POST['name'])){
@@ -82,8 +83,8 @@ if(isset($_POST['code'], $_POST['name'])){
         }
     }
     else{
-        if ($insert_stmt = $db->prepare("INSERT INTO customers (customer_code, reg_no, customer_name, customer_address, customer_address2, customer_address3, customer_address4, states, customer_phone, pic) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)")) {
-            $insert_stmt->bind_param('ssssssssss', $code, $reg_no, $name, $address, $address2, $address3, $address4, $states, $phone, $email);
+        if ($insert_stmt = $db->prepare("INSERT INTO customers (customer_code, reg_no, customer_name, customer_address, customer_address2, customer_address3, customer_address4, states, customer_phone, pic, customer) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)")) {
+            $insert_stmt->bind_param('sssssssssss', $code, $reg_no, $name, $address, $address2, $address3, $address4, $states, $phone, $email, $company);
             
             // Execute the prepared query.
             if (! $insert_stmt->execute()) {

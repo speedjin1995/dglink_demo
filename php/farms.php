@@ -7,6 +7,10 @@ if(!isset($_SESSION['userID'])){
     echo '<script type="text/javascript">';
     echo 'window.location.href = "../login.html";</script>';
 }
+else{
+    $userId = $_SESSION['userID'];
+    $company = $_SESSION['customer'];
+}
 
 if(isset($_POST['code'], $_POST['packages'], $_POST['address'])){
     $code = filter_input(INPUT_POST, 'code', FILTER_SANITIZE_STRING);
@@ -61,8 +65,8 @@ if(isset($_POST['code'], $_POST['packages'], $_POST['address'])){
         }
     }
     else{
-        if ($insert_stmt = $db->prepare("INSERT INTO farms (farms_code, name, address, address2, address3, address4, states, suppliers) VALUES (?, ?, ?, ?, ?, ?, ?, ?)")) {
-            $insert_stmt->bind_param('ssssssss', $code, $packages, $address, $address2, $address3, $address4, $states, $supplier);
+        if ($insert_stmt = $db->prepare("INSERT INTO farms (farms_code, name, address, address2, address3, address4, states, suppliers, customer) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)")) {
+            $insert_stmt->bind_param('sssssssss', $code, $packages, $address, $address2, $address3, $address4, $states, $supplier, $company);
             
             // Execute the prepared query.
             if (! $insert_stmt->execute()) {
