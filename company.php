@@ -16,12 +16,19 @@ else{
 	$result = $stmt->get_result();
     $name = '';
 	$address = '';
+    $address2 = '';
+    $address3 = '';
+    $address4 = '';
 	$phone = '';
 	$email = '';
 	
 	if(($row = $result->fetch_assoc()) !== null){
         $name = $row['name'];
+        $reg_no = $row['reg_no'] ?? '';
         $address = $row['address'];
+        $address2 = $row['address2'] ?? '';
+        $address3 = $row['address3'] ?? '';
+        $address4 = $row['address4'] ?? '';
         $phone = $row['phone'];
         $email = $row['email'];
     }
@@ -46,10 +53,30 @@ else{
 					<label for="name">Company Name *</label>
 					<input type="text" class="form-control" id="name" name="name" value="<?=$name ?>" placeholder="Enter Company Name" required="">
 				</div>
-				
-				<div class="form-group">
+
+                <div class="form-group">
+					<label for="name">Registration No. *</label>
+					<input type="text" class="form-control" id="reg_no" name="reg_no" value="<?=$reg_no ?>" placeholder="Enter Reg No" required="">
+				</div>
+
+                <div class="form-group">
 					<label for="address">Company Address *</label>
-                    <textarea class="form-control" name="address" id="address" rows="3" placeholder="Enter Address" required=""><?=$address ?></textarea>
+                    <input type="text" class="form-control" id="address" name="address" value="<?=$address ?>" placeholder="Enter Company Address" required="">
+				</div>
+
+                <div class="form-group">
+					<label for="address">Company Address 2</label>
+                    <input type="text" class="form-control" id="address2" name="address2" value="<?=$address2 ?>" placeholder="Enter Company Address 2">
+				</div>
+
+                <div class="form-group">
+					<label for="address">Company Address 3</label>
+                    <input type="text" class="form-control" id="address3" name="address3" value="<?=$address3 ?>" placeholder="Enter Company Address 2">
+				</div>
+
+                <div class="form-group">
+					<label for="address">Company Address 4</label>
+                    <input type="text" class="form-control" id="address4" name="address4" value="<?=$address4 ?>" placeholder="Enter Company Address 2">
 				</div>
 
                 <div class="form-group">

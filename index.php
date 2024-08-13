@@ -34,7 +34,7 @@ else{
 
   <title>DG Link</title>
 
-  <!--link rel="icon" href="assets/logoSmall.jpeg" type="image"-->
+  <link rel="icon" href="assets/logo.png" type="image">
   <!-- Font Awesome Icons -->
   <link rel="stylesheet" href="plugins/fontawesome-free/css/all.min.css">
   <!-- IonIcons -->

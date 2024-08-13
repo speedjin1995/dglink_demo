@@ -5,14 +5,20 @@ mysqli_report(MYSQLI_REPORT_ERROR | MYSQLI_REPORT_STRICT);
 session_start();
 $post = json_decode(file_get_contents('php://input'), true);
 
+$services = 'Save_Weight';
+$requests = json_encode($post);
 
+$stmtL = $db->prepare("INSERT INTO api_requests (services, request) VALUES (?, ?)");
+$stmtL->bind_param('ss', $services, $requests);
+$stmtL->execute();
+$invid = $stmtL->insert_id;
 
 if(isset($post['status'], $post['product'], $post['timestampData']
 , $post['vehicleNumber'], $post['driverName'], $post['farmId']
 , $post['averageCage'], $post['averageBird'], $post['capturedData']
 , $post['remark'], $post['startTime'], $post['endTime'], $post['cratesCount']
 , $post['numberOfCages'], $post['totalCagesWeight'], $post['weightDetails']
-, $post['cageDetails'], $post['assignedTo'])){
+, $post['cageDetails'], $post['assignedTo'], $post['company'])){
 
 	$status = $post['status'];
 	$product = $post['product'];
@@ -29,6 +35,8 @@ if(isset($post['status'], $post['product'], $post['timestampData']
 	$numberOfCages = $post['numberOfCages'];
 	$totalCagesWeight = $post['totalCagesWeight'];
 	$assignedTo = $post['assignedTo'];
+	$company = $post['company'];
+
 	$weighted_by = array();
 	array_push($weighted_by, $assignedTo);
 	$weighted_by = json_encode($weighted_by);
@@ -83,8 +91,8 @@ if(isset($post['status'], $post['product'], $post['timestampData']
 	if(isset($post['serialNo']) && ($post['serialNo'] == null || $post['serialNo'] == '')){
 		$serialNo = 'S'.date("Ymd");
 
-		if ($select_stmt = $db->prepare("SELECT COUNT(*) FROM weighing WHERE booking_date >= ? AND deleted='0'")) {
-            $select_stmt->bind_param('s', $today);
+		if ($select_stmt = $db->prepare("SELECT COUNT(*) FROM weighing WHERE booking_date >= ? AND company = ? AND deleted='0'")) {
+            $select_stmt->bind_param('ss', $today, $company);
             
             // Execute the prepared query.
             if (! $select_stmt->execute()) {
@@ -113,8 +121,8 @@ if(isset($post['status'], $post['product'], $post['timestampData']
                 // Check serial
                 do {
                     // Generate the serial number
-                    if ($select_stmt2 = $db->prepare("SELECT COUNT(*) FROM weighing WHERE serial_no = ?")) {
-                        $select_stmt2->bind_param('s', $serialNo);
+                    if ($select_stmt2 = $db->prepare("SELECT COUNT(*) FROM weighing WHERE serial_no = ? and company = ?")) {
+                        $select_stmt2->bind_param('ss', $serialNo, $company);
                         
                         // Execute the prepared query to check if the serial number exists
                         if (! $select_stmt2->execute()) {
