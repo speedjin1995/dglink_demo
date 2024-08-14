@@ -26,48 +26,96 @@ if(($row = $result->fetch_assoc()) !== null){
 	$password = hash('sha512', $password . $row['salt']);
 	
 	if($password == $row['password']){
-	    $message = array();
-	    $message['id'] = $row['id'];
-        $message['username'] = $row['username'];
-        $message['name'] = $row['name'];
-        $message['role_code'] = $row['role_code'];
-        $message['languages'] = $row['languages'];
-        $message['customer'] = $row['customer'];
-        $message['package'] = $row['packages'];
-        $message['customer_det'] = array(
-            "id" => $row['customer'],
-            "reg_no" => $row['reg_no'] ?? '',
-            "name" => $row['name'],
-            "address" => $row['address'],
-            "address2" => $row['address2'] ?? '',
-            "address3" => $row['address3'] ?? '',
-            "address4" => $row['address4'] ?? '',
-            "phone" => $row['phone'],
-            "email" => $row['email']
-        );
-
-        if($row['farms'] != null){
-            $message['farms'] = json_decode($row['farms'], true);
+        if($row['license_key'] != null && $row['activation_date'] != null && $row['activation_date'] >= $now){
+            $message = array();
+            $message['id'] = $row['id'];
+            $message['username'] = $row['username'];
+            $message['name'] = $row['name'];
+            $message['role_code'] = $row['role_code'];
+            $message['languages'] = $row['languages'];
+            $message['customer'] = $row['customer'];
+            $message['package'] = $row['packages'];
+            $message['customer_det'] = array(
+                "id" => $row['customer'],
+                "reg_no" => $row['reg_no'] ?? '',
+                "name" => $row['name'],
+                "address" => $row['address'],
+                "address2" => $row['address2'] ?? '',
+                "address3" => $row['address3'] ?? '',
+                "address4" => $row['address4'] ?? '',
+                "phone" => $row['phone'],
+                "email" => $row['email']
+            );
+    
+            if($row['farms'] != null){
+                $message['farms'] = json_decode($row['farms'], true);
+            }
+            else{
+                $message['farms'] = array();
+            }
+            
+            
+            $response = json_encode(
+                array(
+                    "status"=> "success", 
+                    "message"=> $message
+                )
+            );
+            $stmtU = $db->prepare("UPDATE api_requests SET response = ? WHERE id = ?");
+            $stmtU->bind_param('ss', $response, $invid);
+            $stmtU->execute();
+    
+            $stmt->close();
+            $stmtU->close();
+            $db->close();
+            echo $response;
         }
-        else{
-            $message['farms'] = array();
+	    else{
+            $message = array();
+            $message['id'] = $row['id'];
+            $message['username'] = $row['username'];
+            $message['name'] = $row['name'];
+            $message['role_code'] = $row['role_code'];
+            $message['languages'] = $row['languages'];
+            $message['customer'] = $row['customer'];
+            $message['package'] = $row['packages'];
+            $message['status'] = $row['status'];
+            $message['customer_det'] = array(
+                "id" => $row['customer'],
+                "reg_no" => $row['reg_no'] ?? '',
+                "name" => $row['name'],
+                "address" => $row['address'],
+                "address2" => $row['address2'] ?? '',
+                "address3" => $row['address3'] ?? '',
+                "address4" => $row['address4'] ?? '',
+                "phone" => $row['phone'],
+                "email" => $row['email']
+            );
+    
+            if($row['farms'] != null){
+                $message['farms'] = json_decode($row['farms'], true);
+            }
+            else{
+                $message['farms'] = array();
+            }
+            
+            $response = json_encode(
+                array(
+                    "status"=> "failed", 
+                    "error" => "expired",
+                    "description" => "Please Activate Your License",
+                    "message"=> $message
+                )
+            );
+            $stmtU = $db->prepare("UPDATE api_requests SET response = ? WHERE id = ?");
+            $stmtU->bind_param('ss', $response, $invid);
+            $stmtU->execute();
+    
+            $stmt->close();
+            $stmtU->close();
+            $db->close();
+            echo $response;
         }
-        
-		
-        $response = json_encode(
-            array(
-                "status"=> "success", 
-                "message"=> $message
-            )
-        );
-        $stmtU = $db->prepare("UPDATE api_requests SET response = ? WHERE id = ?");
-        $stmtU->bind_param('ss', $response, $invid);
-        $stmtU->execute();
-
-        $stmt->close();
-        $stmtU->close();
-		$db->close();
-        echo $response;
 	} 
 	else{
 		$response = json_encode(
