@@ -33,6 +33,7 @@ if(($row = $result->fetch_assoc()) !== null){
         $message['role_code'] = $row['role_code'];
         $message['languages'] = $row['languages'];
         $message['customer'] = $row['customer'];
+        $message['package'] = $row['packages'];
         $message['customer_det'] = array(
             "id" => $row['customer'],
             "reg_no" => $row['reg_no'] ?? '',
