@@ -11,6 +11,7 @@ else{
   $_SESSION['page']='farms';
   $suppliers = $db->query("SELECT * FROM supplies WHERE deleted = '0'");
   $states = $db->query("SELECT * FROM states");
+  $products = $db->query("SELECT * FROM products WHERE deleted = '0'"); // Products
 }
 ?>
 <div class="content-header">
@@ -31,19 +32,19 @@ else{
 			<div class="col-12">
 				<div class="card">
 					<div class="card-header">
-                        <div class="row">
-                          <div class="col-5"></div>
-                            <div class="col-2">
-                                <input type="file" id="fileInput" accept=".xlsx, .xls" />
-                            </div>
-                            <div class="col-2">
-                                <button type="button" class="btn btn-block bg-gradient-warning btn-sm" id="importExcelbtn"><?=$languageArray['import_excel_code'][$language] ?></button>
-                            </div>                            
-                            <div class="col-3">
-                                <button type="button" class="btn btn-block bg-gradient-warning btn-sm" id="addPackages"><?=$languageArray['add_farms_code'][$language] ?></button>
-                            </div>
-                        </div>
-                    </div>
+            <div class="row">
+              <div class="col-5"></div>
+                <div class="col-2">
+                    <input type="file" id="fileInput" accept=".xlsx, .xls" />
+                </div>
+                <div class="col-2">
+                    <button type="button" class="btn btn-block bg-gradient-warning btn-sm" id="importExcelbtn"><?=$languageArray['import_excel_code'][$language] ?></button>
+                </div>                            
+                <div class="col-3">
+                    <button type="button" class="btn btn-block bg-gradient-warning btn-sm" id="addPackages"><?=$languageArray['add_farms_code'][$language] ?></button>
+                </div>
+            </div>
+          </div>
 					<div class="card-body">
 						<table id="packageTable" class="table table-bordered table-striped">
 							<thead>
@@ -52,6 +53,7 @@ else{
                   <th>Code</th>
                   <th>States</th>
 									<th>Farm</th>
+									<th>Category</th>
 									<th>Actions</th>
 								</tr>
 							</thead>
@@ -88,7 +90,7 @@ else{
                 </div>
                 <div class="form-group"> 
                   <label for="address"><?=$languageArray['address_code'][$language] ?> *</label>
-                  <input type="text" class="form-control" name="address" id="address" placeholder="Enter  Address" required>
+                  <input type="text" class="form-control" name="address" id="address" placeholder="Enter Address" required>
                 </div>
                 <div class="form-group"> 
                   <label for="address"><?=$languageArray['address_code'][$language] ?> 2</label>
@@ -110,12 +112,29 @@ else{
                     <?php } ?>
                   </select>
                 </div>
-                <div class="form-group" style="display:none;">
+                <div class="form-group">
                   <label><?=$languageArray['supplier_code'][$language] ?></label>
                   <select class="form-control" style="width: 100%;" id="supplier" name="supplier">
                     <option selected="selected">-</option>
                     <?php while($rowCustomer2=mysqli_fetch_assoc($suppliers)){ ?>
                       <option value="<?=$rowCustomer2['id'] ?>"><?=$rowCustomer2['supplier_name'] ?></option>
+                    <?php } ?>
+                  </select>
+                </div>
+                <div class="form-group">
+                  <label><?=$languageArray['category_code'][$language] ?> *</label>
+                  <select class="form-control" style="width: 100%;" id="category" name="category">
+                    <option value="CCB" selected="selected">CCB</option>
+                    <option value="Contract">Contract</option>
+                    <option value="Other">Other</option>
+                  </select>
+                </div>
+                <div class="form-group">
+                  <label><?=$languageArray['product_code'][$language] ?> *</label>
+                  <select class="form-control select2" style="width: 100%;" id="product" name="product">
+                    <option selected="selected">-</option>
+                    <?php while($row5=mysqli_fetch_assoc($products)){ ?>
+                      <option value="<?=$row5['product_name'] ?>"><?=$row5['product_name'] ?></option>
                     <?php } ?>
                   </select>
                 </div>
@@ -150,6 +169,7 @@ $(function () {
             { data: 'farms_code' },
             { data: 'states' },
             { data: 'name' },
+            { data: 'category' },
             { 
               data: 'deleted',
               render: function (data, type, row) {
@@ -201,7 +221,9 @@ $(function () {
         $('#packagesModal').find('#address3').val("");
         $('#packagesModal').find('#address4').val("");
         $('#packagesModal').find('#states').val("");
+        $('#packagesModal').find('#product').val("");
         $('#packagesModal').find('#supplier').val("");
+        $('#packagesModal').find('#category').val("CCB");
         $('#packagesModal').modal('show');
         
         $('#packageForm').validate({
@@ -284,6 +306,8 @@ function edit(id){
             $('#packagesModal').find('#address4').val(obj.message.address4);
             $('#packagesModal').find('#states').val(obj.message.states);
             $('#packagesModal').find('#supplier').val(obj.message.suppliers);
+            $('#packagesModal').find('#category').val(obj.message.category);
+            $('#packagesModal').find('#product').val(obj.message.product);
             $('#packagesModal').modal('show');
             
             $('#packageForm').validate({

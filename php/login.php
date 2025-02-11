@@ -18,7 +18,6 @@ if(($row = $result->fetch_assoc()) !== null){
 	if($password == $row['password']){
 		$_SESSION['userID']=$row['id'];
 		$_SESSION['role_code']=$row['role_code'];
-		$_SESSION['customer']=$row['customer'];
 		$_SESSION['page']='dashboard';
 		$stmt->close();
 		$db->close();

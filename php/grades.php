@@ -7,10 +7,6 @@ if(!isset($_SESSION['userID'])){
     echo '<script type="text/javascript">';
     echo 'window.location.href = "../login.html";</script>';
 }
-else{
-    $userId = $_SESSION['userID'];
-    $company = $_SESSION['customer'];
-}
 
 if(isset($_POST['units'])){
     $lotsNumber = filter_input(INPUT_POST, 'units', FILTER_SANITIZE_STRING);
@@ -42,8 +38,8 @@ if(isset($_POST['units'])){
         }
     }
     else{
-        if ($insert_stmt = $db->prepare("INSERT INTO grades (units, customer) VALUES (?, ?)")) {
-            $insert_stmt->bind_param('ss', $lotsNumber, $company);
+        if ($insert_stmt = $db->prepare("INSERT INTO grades (units) VALUES (?)")) {
+            $insert_stmt->bind_param('s', $lotsNumber);
             
             // Execute the prepared query.
             if (! $insert_stmt->execute()) {

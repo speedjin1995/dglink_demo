@@ -1,2 +1,2 @@
-# DG Link Demo
- This is for DG Link Demo
+# synctronix
+Synctronix Weighing Scale

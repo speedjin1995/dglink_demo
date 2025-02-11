@@ -7,10 +7,6 @@ if(!isset($_SESSION['userID'])){
     echo '<script type="text/javascript">';
     echo 'window.location.href = "../login.html";</script>';
 }
-else{
-    $userId = $_SESSION['userID'];
-    $company = $_SESSION['customer'];
-}
 
 if(isset($_POST['code'], $_POST['transporter'])){
     $code = filter_input(INPUT_POST, 'code', FILTER_SANITIZE_STRING);
@@ -43,8 +39,8 @@ if(isset($_POST['code'], $_POST['transporter'])){
         }
     }
     else{
-        if ($insert_stmt = $db->prepare("INSERT INTO transporters (transporter_code, transporter_name, customer) VALUES (?, ?, ?)")) {
-            $insert_stmt->bind_param('sss', $code, $transporter, $company);
+        if ($insert_stmt = $db->prepare("INSERT INTO transporters (transporter_code, transporter_name) VALUES (?, ?)")) {
+            $insert_stmt->bind_param('ss', $code, $transporter);
             
             // Execute the prepared query.
             if (! $insert_stmt->execute()) {

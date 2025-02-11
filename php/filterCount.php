@@ -1,6 +1,28 @@
 <?php
 ## Database configuration
 require_once 'db_connect.php';
+session_start();
+$farms = array();
+
+if(!isset($_SESSION['userID'])){
+    echo '<script type="text/javascript">';
+    echo 'window.location.href = "../login.html";</script>';
+}
+else{
+    $userId = $_SESSION['userID'];
+    $role_code = $_SESSION['role_code'];
+    
+    $stmt = $db->prepare("SELECT * from users where id = ?");
+    $stmt->bind_param('s', $userId);
+    $stmt->execute();
+    $result = $stmt->get_result();
+    
+    if(($row = $result->fetch_assoc()) !== null){
+        if($row['farms'] != null){
+            $farms = json_decode($row['farms'], true);
+        }
+    }
+}
 
 ## Read value
 $draw = $_POST['draw'];
@@ -15,37 +37,47 @@ $searchValue = mysqli_real_escape_string($db,$_POST['search']['value']); // Sear
 $searchQuery = " ";
 
 if($_POST['fromDate'] != null && $_POST['fromDate'] != ''){
-  $searchQuery = " and created_datetime >= '".$_POST['fromDate']."'";
+  $searchQuery = " and weighing.start_time >= '".$_POST['fromDate']."'";
 }
 
 if($_POST['toDate'] != null && $_POST['toDate'] != ''){
-	$searchQuery .= " and created_datetime <= '".$_POST['toDate']."'";
+	$searchQuery .= " and weighing.start_time <= '".$_POST['toDate']."'";
+}
+
+if($_POST['product'] != null && $_POST['product'] != ''){
+	$searchQuery .= " and weighing.product = '".$_POST['product']."'";
 }
 
 if (isset($_POST['farm']) && is_array($_POST['farm']) && count($_POST['farm']) > 0) {
-    // Sanitize each farm ID
-    $farms = array_map(function($farm) {
-        return "'" . $farm . "'";
-    }, $_POST['farm']);
-    
-    // Join sanitized farm IDs with commas to form an SQL IN clause
-    $farmsList = implode(',', $farms);
-    
-    // Append to search query
-    $searchQuery .= " AND farm_id IN ($farmsList)";
+  // Sanitize each farm ID
+  $farms = array_map(function($farm) {
+      return "'" . $farm . "'";
+  }, $_POST['farm']);
+  
+  // Join sanitized farm IDs with commas to form an SQL IN clause
+  $farmsList = implode(',', $farms);
+  
+  // Append to search query
+  $searchQuery .= " AND weighing.farm_id IN ($farmsList)";
+}
+else if(count($farms) > 0){
+  $farmsList = implode(',', $farms);
+  
+  // Append to search query
+  $searchQuery .= " AND weighing.farm_id IN ($farmsList)";
 }
 
 if (isset($_POST['customer']) && is_array($_POST['customer']) && count($_POST['customer']) > 0) {
-    // Sanitize each customer name
-    $customers = array_map(function($customer) {
-        return "'" . $customer . "'";
-    }, $_POST['customer']);
-    
-    // Join sanitized customer names with commas to form an SQL IN clause
-    $customersList = implode(',', $customers);
-    
-    // Append to search query
-    $searchQuery .= " AND customer IN ($customersList)";
+  // Sanitize each customer name
+  $customers = array_map(function($customer) {
+    return "'" . $customer . "'";
+  }, $_POST['customer']);
+  
+  // Join sanitized customer names with commas to form an SQL IN clause
+  $customersList = implode(',', $customers);
+  
+  // Append to search query
+  $searchQuery .= " AND weighing.customer IN ($customersList)";
 }
 
 if($searchValue != ''){

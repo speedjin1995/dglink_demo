@@ -9,12 +9,11 @@ if(!isset($_SESSION['userID'])){
 }
 else{
     $userId = $_SESSION['userID'];
-    $company = $_SESSION['customer'];
 }
 
 if(isset($_POST['code'], $_POST['name'])){
     $code = filter_input(INPUT_POST, 'code', FILTER_SANITIZE_STRING);
-    $name = filter_input(INPUT_POST, 'name', FILTER_SANITIZE_STRING);
+    $name = $_POST['name'];
     $reg_no = null;
 	$address = null;
     $address2 = null;
@@ -83,8 +82,8 @@ if(isset($_POST['code'], $_POST['name'])){
         }
     }
     else{
-        if ($insert_stmt = $db->prepare("INSERT INTO customers (customer_code, reg_no, customer_name, customer_address, customer_address2, customer_address3, customer_address4, states, customer_phone, pic, customer) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)")) {
-            $insert_stmt->bind_param('sssssssssss', $code, $reg_no, $name, $address, $address2, $address3, $address4, $states, $phone, $email, $company);
+        if ($insert_stmt = $db->prepare("INSERT INTO customers (customer_code, reg_no, customer_name, customer_address, customer_address2, customer_address3, customer_address4, states, customer_phone, pic) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)")) {
+            $insert_stmt->bind_param('ssssssssss', $code, $reg_no, $name, $address, $address2, $address3, $address4, $states, $phone, $email);
             
             // Execute the prepared query.
             if (! $insert_stmt->execute()) {

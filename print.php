@@ -147,7 +147,6 @@ function rearrangeList($weightDetails) {
     // Now you can work with $mapOfWeights and the calculated totals as needed.
 }
 
-
 if(isset($_GET['userID'])){
     $id = $_GET['userID'];
 
@@ -281,6 +280,12 @@ if(isset($_GET['userID'])){
                 width: 66.666667%;
             }
             
+            #container {
+                min-height: 75vh;
+                display: table;
+                width: 100%;
+            }
+            
             #footer {
                 padding: 10px 10px 0px 10px;
                 bottom: 0;
@@ -292,7 +297,7 @@ if(isset($_GET['userID'])){
     
     //$noOfRows = 0;
     //for($p=0; $p<$pages; $p++){
-        $message .= '<div id="preview-container"><div id="header">
+        $message .= '<div id="preview-container">
             <table class="table">
                 <tbody>
                     <tr>
@@ -451,6 +456,7 @@ if(isset($_GET['userID'])){
                     </tr>
                 </tbody>
             </table><br>
+    
             
             <table class="table">
                 <tbody>
@@ -503,7 +509,7 @@ if(isset($_GET['userID'])){
     
                     $message .= $indexStringCage;
                 $message .= '</tbody>
-            </table></div><br><div id="container">';
+            </table><br>';
             
             if (!empty($mapOfWeights)) {
                 foreach ($mapOfWeights as $group) {
@@ -581,7 +587,7 @@ if(isset($_GET['userID'])){
             
                             if ($count > 0) {
                                 for ($k = 0; $k < (10 - $count); $k++) {
-                                    $indexString .= '<td style="border-top:0px;padding: 0 0.7rem;width: 10%;"><p><span style="font-size: 12px;font-family: sans-serif;"></span></p></td>';
+                                    $indexString .= '<td style="border-top:0px;padding: 0 0.7rem;width: 10%;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>';
                                 }
                                 $indexString .= '</tr>';
                                 //$noOfRows++;
@@ -600,7 +606,7 @@ if(isset($_GET['userID'])){
                 }
             }
             
-            $message .= '</div><div id="footer">
+            $message .= '<div id="footer">
                 <hr>
                 <table class="table">
                     <tbody>
@@ -773,10 +779,8 @@ if(isset($_GET['userID'])){
                 echo "<script>
                     function printPreview() {
                         var printWindow = window.open('', '_blank');
-                        printWindow.document.write('<html><title>F-".$row['po_no']."_".substr($row['customer'], 0, 15)."_".$row['serial_no']."</title><style>@media print{@page{margin-left:.3in;margin-right:.3in;margin-top:.1in;margin-bottom:.1in}}table{width:100%;border-collapse:collapse}.table td,.table th{padding:.7rem;vertical-align:top;border-top:1px solid #dee2e6}.table-bordered{border:1px solid #000}.table-bordered td,.table-bordered th{border:1px solid #000;font-family:sans-serif}.row{display:flex;flex-wrap:wrap;margin-top:20px}.col-md-3{position:relative;width:25%}.col-md-9{position:relative;width:75%}.col-md-7{position:relative;width:58.333333%}.col-md-5{position:relative;width:41.666667%}.col-md-6{position:relative;width:50%}.col-md-4{position:relative;width:33.333333%}.col-md-8{position:relative;width:66.666667%}#container {margin-top: 380px; height: 50%; width: 100%; position: relative; display: block; page-break-inside: avoid; page-break-after: auto;}#header, #footer{position: fixed;left: 0;right: 0;padding: 10px;z-index: 1;}#header{top: 0;}#footer{bottom: 0;}table {width: 100%; page-break-inside: auto; page-break-after: always;}tr {page-break-inside: avoid; page-break-after: auto;}thead {display: table-header-group;}tfoot {display: table-footer-group;}</style><body>');
-                        printWindow.document.write(document.getElementById('header').outerHTML);
-                        printWindow.document.write(document.getElementById('container').outerHTML);
-                        printWindow.document.write(document.getElementById('footer').outerHTML);
+                        printWindow.document.write('<html><title>F-".$row['po_no']."_".substr($row['customer'], 0, 15)."_".$row['serial_no']."</title><style>@media print{@page{margin-left:.3in;margin-right:.3in;margin-top:.1in;margin-bottom:.1in}}table{width:100%;border-collapse:collapse}.table td,.table th{padding:.7rem;vertical-align:top;border-top:1px solid #dee2e6}.table-bordered{border:1px solid #000}.table-bordered td,.table-bordered th{border:1px solid #000;font-family:sans-serif}.row{display:flex;flex-wrap:wrap;margin-top:20px}.col-md-3{position:relative;width:25%}.col-md-9{position:relative;width:75%}.col-md-7{position:relative;width:58.333333%}.col-md-5{position:relative;width:41.666667%}.col-md-6{position:relative;width:50%}.col-md-4{position:relative;width:33.333333%}.col-md-8{position:relative;width:66.666667%}#container {min-height: 75vh;display: table;width: 100%;}#footer{position:fixed;padding:10px 10px 0 10px;bottom:0;width:100%;height:auto}</style><body>');
+                        printWindow.document.write(document.getElementById('preview-container').innerHTML);
                         printWindow.document.write('</body></html>');
                         printWindow.document.close();
                         printWindow.print();

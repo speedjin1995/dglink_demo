@@ -1,8 +1,6 @@
 <?php
 ## Database configuration
 require_once 'db_connect.php';
-session_start();
-$company = $_SESSION['customer'];
 
 ## Read value
 $draw = $_POST['draw'];
@@ -22,17 +20,17 @@ if($searchValue != ''){
 }
 
 ## Total number of records without filtering
-$sel = mysqli_query($db,"select count(*) as allcount from users WHERE customer = '$company'");
+$sel = mysqli_query($db,"select count(*) as allcount from users");
 $records = mysqli_fetch_assoc($sel);
 $totalRecords = $records['allcount'];
 
 ## Total number of record with filtering
-$sel = mysqli_query($db,"select count(*) as allcount from users, roles WHERE users.customer = '$company' AND users.role_code = roles.role_code AND users.deleted = '0'".$searchQuery);
+$sel = mysqli_query($db,"select count(*) as allcount from users, roles WHERE users.role_code = roles.role_code AND users.deleted = '0'".$searchQuery);
 $records = mysqli_fetch_assoc($sel);
 $totalRecordwithFilter = $records['allcount'];
 
 ## Fetch records
-$empQuery = "select users.id, users.username, users.name, users.created_date, users.created_by, roles.role_name from users, roles WHERE users.customer = '$company' AND 
+$empQuery = "select users.id, users.username, users.name, users.created_date, users.created_by, roles.role_name from users, roles WHERE 
 users.role_code = roles.role_code AND users.deleted = '0'".$searchQuery." order by ".$columnName." ".$columnSortOrder." limit ".$row.",".$rowperpage;
 $empRecords = mysqli_query($db, $empQuery);
 $data = array();

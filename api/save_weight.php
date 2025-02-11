@@ -11,14 +11,13 @@ $requests = json_encode($post);
 $stmtL = $db->prepare("INSERT INTO api_requests (services, request) VALUES (?, ?)");
 $stmtL->bind_param('ss', $services, $requests);
 $stmtL->execute();
-$invid = $stmtL->insert_id;
 
 if(isset($post['status'], $post['product'], $post['timestampData']
 , $post['vehicleNumber'], $post['driverName'], $post['farmId']
 , $post['averageCage'], $post['averageBird'], $post['capturedData']
 , $post['remark'], $post['startTime'], $post['endTime'], $post['cratesCount']
 , $post['numberOfCages'], $post['totalCagesWeight'], $post['weightDetails']
-, $post['cageDetails'], $post['assignedTo'], $post['company'])){
+, $post['cageDetails'], $post['assignedTo'])){
 
 	$status = $post['status'];
 	$product = $post['product'];
@@ -35,8 +34,6 @@ if(isset($post['status'], $post['product'], $post['timestampData']
 	$numberOfCages = $post['numberOfCages'];
 	$totalCagesWeight = $post['totalCagesWeight'];
 	$assignedTo = $post['assignedTo'];
-	$company = $post['company'];
-
 	$weighted_by = array();
 	array_push($weighted_by, $assignedTo);
 	$weighted_by = json_encode($weighted_by);
@@ -49,6 +46,10 @@ if(isset($post['status'], $post['product'], $post['timestampData']
 	$remark = $post['remark'];
 	$startTime = $post['startTime'];
 	$endTime = $post['endTime'];
+	
+	$startDateTimeObj = new DateTime($startTime);
+    $startDateTime = $startDateTimeObj->format("Y-m-d 00:00:00");
+    $startDateTime2 = $startDateTimeObj->format("Ymd");
 
     $doNo = null;
 	$customerName = null;
@@ -89,10 +90,10 @@ if(isset($post['status'], $post['product'], $post['timestampData']
 	}
 
 	if(isset($post['serialNo']) && ($post['serialNo'] == null || $post['serialNo'] == '')){
-		$serialNo = 'S'.date("Ymd");
+		$serialNo = 'S'.$startDateTime2;
 
-		if ($select_stmt = $db->prepare("SELECT COUNT(*) FROM weighing WHERE booking_date >= ? AND company = ? AND deleted='0'")) {
-            $select_stmt->bind_param('ss', $today, $company);
+		if ($select_stmt = $db->prepare("SELECT COUNT(*) FROM weighing WHERE booking_date >= ? AND deleted='0'")) {
+            $select_stmt->bind_param('s', $startDateTime);
             
             // Execute the prepared query.
             if (! $select_stmt->execute()) {
@@ -121,8 +122,8 @@ if(isset($post['status'], $post['product'], $post['timestampData']
                 // Check serial
                 do {
                     // Generate the serial number
-                    if ($select_stmt2 = $db->prepare("SELECT COUNT(*) FROM weighing WHERE serial_no = ? and company = ?")) {
-                        $select_stmt2->bind_param('ss', $serialNo, $company);
+                    if ($select_stmt2 = $db->prepare("SELECT COUNT(*) FROM weighing WHERE serial_no = ?")) {
+                        $select_stmt2->bind_param('s', $serialNo);
                         
                         // Execute the prepared query to check if the serial number exists
                         if (! $select_stmt2->execute()) {
@@ -141,7 +142,7 @@ if(isset($post['status'], $post['product'], $post['timestampData']
                         // If the serial number already exists, increment the count and generate a new serial number
                         $count++; // Increment the count
                         $charSize = strlen(strval($count));
-                        $serialNo = 'S'.date("Ymd"); // Reset the serial number
+                        $serialNo = 'S'.$startDateTime2; // Reset the serial number
                         
                         // Generate the new serial number
                         for($ind = 0; $ind < (4 - (int)$charSize); $ind++) {

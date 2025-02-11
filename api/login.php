@@ -10,14 +10,12 @@ $requests = json_encode($post);
 $stmtL = $db->prepare("INSERT INTO api_requests (services, request) VALUES (?, ?)");
 $stmtL->bind_param('ss', $services, $requests);
 $stmtL->execute();
-$invid = $stmtL->insert_id;
 
 $username=$post['userEmail'];
 $password=$post['userPassword'];
 $now = date("Y-m-d H:i:s");
 
-$stmt = $db->prepare("SELECT users.*, companies.reg_no, companies.name AS comp_name, companies.address, companies.address2, companies.address3, companies.address4, companies.phone, companies.email from users, companies where users.customer = companies.id AND users.username= ?");
-//$stmt = $db->prepare("SELECT * from users where username= ?");
+$stmt = $db->prepare("SELECT * from users where username= ?");
 $stmt->bind_param('s', $username);
 $stmt->execute();
 $result = $stmt->get_result();
@@ -26,124 +24,46 @@ if(($row = $result->fetch_assoc()) !== null){
 	$password = hash('sha512', $password . $row['salt']);
 	
 	if($password == $row['password']){
-        if($row['license_key'] != null && $row['activation_date'] != null && $row['activation_date'] >= $now){
-            $message = array();
-            $message['id'] = $row['id'];
-            $message['username'] = $row['username'];
-            $message['name'] = $row['name'];
-            $message['role_code'] = $row['role_code'];
-            $message['languages'] = $row['languages'];
-            $message['customer'] = $row['customer'];
-            $message['package'] = $row['packages'];
-            $message['customer_det'] = array(
-                "id" => $row['customer'],
-                "reg_no" => $row['reg_no'] ?? '',
-                "name" => $row['name'],
-                "address" => $row['address'],
-                "address2" => $row['address2'] ?? '',
-                "address3" => $row['address3'] ?? '',
-                "address4" => $row['address4'] ?? '',
-                "phone" => $row['phone'],
-                "email" => $row['email']
-            );
-    
-            if($row['farms'] != null){
-                $message['farms'] = json_decode($row['farms'], true);
-            }
-            else{
-                $message['farms'] = array();
-            }
-            
-            
-            $response = json_encode(
-                array(
-                    "status"=> "success", 
-                    "message"=> $message
-                )
-            );
-            $stmtU = $db->prepare("UPDATE api_requests SET response = ? WHERE id = ?");
-            $stmtU->bind_param('ss', $response, $invid);
-            $stmtU->execute();
-    
-            $stmt->close();
-            $stmtU->close();
-            $db->close();
-            echo $response;
+	    $message = array();
+	    $message['id'] = $row['id'];
+        $message['username'] = $row['username'];
+        $message['name'] = $row['name'];
+        $message['role_code'] = $row['role_code'];
+        $message['languages'] = $row['languages'];
+
+        if($row['farms'] != null){
+            $message['farms'] = json_decode($row['farms'], true);
         }
-	    else{
-            $message = array();
-            $message['id'] = $row['id'];
-            $message['username'] = $row['username'];
-            $message['name'] = $row['name'];
-            $message['role_code'] = $row['role_code'];
-            $message['languages'] = $row['languages'];
-            $message['customer'] = $row['customer'];
-            $message['package'] = $row['packages'];
-            $message['status'] = $row['status'];
-            $message['customer_det'] = array(
-                "id" => $row['customer'],
-                "reg_no" => $row['reg_no'] ?? '',
-                "name" => $row['name'],
-                "address" => $row['address'],
-                "address2" => $row['address2'] ?? '',
-                "address3" => $row['address3'] ?? '',
-                "address4" => $row['address4'] ?? '',
-                "phone" => $row['phone'],
-                "email" => $row['email']
-            );
-    
-            if($row['farms'] != null){
-                $message['farms'] = json_decode($row['farms'], true);
-            }
-            else{
-                $message['farms'] = array();
-            }
-            
-            $response = json_encode(
-                array(
-                    "status"=> "failed", 
-                    "error" => "expired",
-                    "description" => "Please Activate Your License",
-                    "message"=> $message
-                )
-            );
-            $stmtU = $db->prepare("UPDATE api_requests SET response = ? WHERE id = ?");
-            $stmtU->bind_param('ss', $response, $invid);
-            $stmtU->execute();
-    
-            $stmt->close();
-            $stmtU->close();
-            $db->close();
-            echo $response;
+        else{
+            $message['farms'] = array();
         }
-	} 
-	else{
-		$response = json_encode(
+        
+		$stmt->close();
+		$db->close();
+		
+		echo json_encode(
             array(
-                "status"=> "failed", 
-                "message"=> "Username or Password is wrong"
+                "status"=> "success", 
+                "message"=> $message
             )
         );
-        $stmtU = $db->prepare("UPDATE api_requests SET response = ? WHERE id = ?");
-        $stmtU->bind_param('ss', $response, $invid);
-        $stmtU->execute();
-    
-        $db->close();
-        echo $response;
+	} 
+	else{
+		echo json_encode(
+            array(
+                "status"=> "failed", 
+                "message"=> $update_stmt->error
+            )
+        );
 	}
+	
 } 
 else{
-    $response = json_encode(
+	 echo json_encode(
         array(
             "status"=> "failed", 
-            "message"=> "Username or Password is wrong"
+            "message"=> $update_stmt->error
         )
     );
-    $stmtU = $db->prepare("UPDATE api_requests SET response = ? WHERE id = ?");
-    $stmtU->bind_param('ss', $response, $invid);
-    $stmtU->execute();
-
-    $db->close();
-    echo $response;
 }
 ?>
