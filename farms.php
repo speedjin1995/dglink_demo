@@ -124,7 +124,7 @@ else{
                 <div class="form-group">
                   <label><?=$languageArray['category_code'][$language] ?> *</label>
                   <select class="form-control" style="width: 100%;" id="category" name="category">
-                    <option value="CCB" selected="selected">CCB</option>
+                    <option value="CCB" selected="selected">Own</option>
                     <option value="Contract">Contract</option>
                     <option value="Other">Other</option>
                   </select>

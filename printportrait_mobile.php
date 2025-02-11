@@ -283,7 +283,7 @@ if(isset($_GET['userID'])){
                         $message .= '</td>
                         <td style="width: 50%;border-top:0px;padding: 0 0.7rem;">
                             <p>
-                                <span style="font-size: 14px;font-family: sans-serif;font-weight: bold;">CCBSB No.: </span>
+                                <span style="font-size: 14px;font-family: sans-serif;font-weight: bold;">DO No.: </span>
                                 <span style="font-size: 14px;font-family: sans-serif;font-weight: bold;color: red;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'.$row['po_no'].'</span>
                             </p>
                         </td>
