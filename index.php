@@ -32,9 +32,9 @@ else{
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta http-equiv="x-ua-compatible" content="ie=edge">
 
-  <title>CCB </title>
+  <title>Livestocks Demo</title>
 
-  <link rel="icon" href="assets/logoSmall.jpeg" type="image">
+  <!--link rel="icon" href="assets/logoSmall.jpeg" type="image"-->
   <!-- Font Awesome Icons -->
   <link rel="stylesheet" href="plugins/fontawesome-free/css/all.min.css">
   <!-- IonIcons -->
@@ -310,10 +310,10 @@ to get the desired effect
   <!--aside class="main-sidebar sidebar-dark-primary elevation-4"  style="background-color: #ffffff;"-->
   <aside class="main-sidebar sidebar-dark-primary elevation-4" style="background-color: #3d44c1;">
     <!-- Brand Logo -->
-    <a href="#" class="brand-link logo-switch" style="line-height: 5;">
+    <!--a href="#" class="brand-link logo-switch" style="line-height: 5;">
       <img src="assets/logoSmall.jpeg" alt="Sneakercube Logo" class="brand-image-xl logo-xs">
       <img src="assets/logoSmall.jpeg" alt="Sneakercube Logo" class="brand-image-xl logo-xl" style="width: 40%;max-height: max-content;">
-    </a>
+    </a-->
 
     <!-- Sidebar -->
     <div class="sidebar">

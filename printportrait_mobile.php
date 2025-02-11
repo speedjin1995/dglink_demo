@@ -273,14 +273,6 @@ if(isset($_GET['userID'])){
             <table class="table">
                 <tbody>
                     <tr>
-                        <td style="width: 100%;border-top:0px;text-align:center;"><img src="https://ccb.syncweigh.com/assets/header.png" width="100%" height="auto" /></td>
-                    </tr>
-                </tbody>
-            </table><br>
-            
-            <table class="table">
-                <tbody>
-                    <tr>
                         <td style="width: 50%;border-top:0px;padding: 0 0.7rem;">';
 
                         $message .= '<p>
